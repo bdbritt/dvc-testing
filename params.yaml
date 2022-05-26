@@ -1,0 +1,13 @@
+prepare:
+  split: 0.20
+  seed: 20220519
+
+train:
+  n_estimators: 250
+  seed: 20220519
+  min_split: 2
+
+evaluate:
+  reports_dir: reports
+  metrics_file: "metrics.json"
+  confusion_matrix_image: "confusion_matrix.png"
