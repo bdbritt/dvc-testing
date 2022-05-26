@@ -1,0 +1,31 @@
+stages:
+  retrieve:
+    cmd: python src/data/make_dataset.py
+    deps:
+    - src/data/make_dataset.py
+  prepare:
+    cmd: python src/features/prepare.py
+    deps:
+    - data/raw
+    - src/features/prepare.py
+    params:
+    - prepare.seed
+    - prepare.split
+  train:
+    cmd: python src/models/train_model.py
+    deps:
+    - data/processed
+    - src/models/train_model.py
+    params:
+    - train.min_split
+    - train.n_estimators
+    - train.seed
+  evaluate:
+    cmd: python src/models/evaluate.py --config=params.yaml
+    deps:
+    - data/processed
+    - models/rf_clf.pkl
+    - src/models/evaluate.py
+    metrics:
+    - reports/metrics.json:
+        cache: false
