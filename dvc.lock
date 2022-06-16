@@ -1,0 +1,54 @@
+schema: '2.0'
+stages:
+  retrieve:
+    cmd: python src/data/make_dataset.py
+    deps:
+    - path: src/data/make_dataset.py
+      md5: 2bfb3c544a5824bdff836a94355c3cd6
+      size: 1049
+  prepare:
+    cmd: python src/features/prepare.py
+    deps:
+    - path: data/raw
+      md5: 16441876126f1be102258c25f584396a.dir
+      size: 24008
+      nfiles: 1
+    - path: src/features/prepare.py
+      md5: 4f58f14993269fe04b3e7da2099eb9ae
+      size: 1997
+    params:
+      params.yaml:
+        prepare.seed: 20220519
+        prepare.split: 0.2
+  train:
+    cmd: python src/models/train_model.py
+    deps:
+    - path: data/processed
+      md5: 53b61cf5f88b1479ef1d108e260dab22.dir
+      size: 174336
+      nfiles: 5
+    - path: src/models/train_model.py
+      md5: 17ff23d9628e04af50a0fca14cd00d0a
+      size: 1835
+    params:
+      params.yaml:
+        train.min_split: 2
+        train.n_estimators: 250
+        train.seed: 20220519
+  evaluate:
+    cmd: python src/models/evaluate.py --config=params.yaml
+    deps:
+    - path: data/processed
+      md5: 53b61cf5f88b1479ef1d108e260dab22.dir
+      size: 174336
+      nfiles: 5
+    - path: models/rf_clf.pkl
+      md5: e3fb453660938a28dfffbd3e5a90c718
+      size: 3799616
+    - path: src/models/evaluate.py
+      md5: d3510ce32906cc0b63298593e320cde6
+      size: 3271
+    outs:
+    - path: reports/metrics.json
+      md5: ce58a5485e94abe1fdb42c57481f5b84
+      size: 254
