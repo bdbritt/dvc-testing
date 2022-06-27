@@ -37,10 +37,7 @@ def write_model(clf) -> None:
     """
     write model to file
     """
-
-    
     logging.info("writing model to file")
-
     check_dir = f"{os.path.join(PROJECT_DIR, CLF_OUT)}\\"
     if not check_dir:
         os.makedirs(check_dir)
