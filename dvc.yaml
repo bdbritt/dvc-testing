@@ -3,29 +3,40 @@ stages:
     cmd: python src/data/make_dataset.py
     deps:
     - src/data/make_dataset.py
+    outs:
+    - data/raw/indians_diabetes_data.csv
   prepare:
     cmd: python src/features/prepare.py
     deps:
-    - data/raw
+    - data/raw/indians_diabetes_data.csv
     - src/features/prepare.py
     params:
     - prepare.seed
     - prepare.split
+    outs:
+    - C:\Users\leopa\Documents\workspace\dvc-testing\data\processed\x_test.txt
+    - data/processed/x_train.txt
+    - data/processed/y_test.txt
+    - data/processed/y_train.txt
   train:
     cmd: python src/models/train_model.py
     deps:
-    - data/processed
+    - data/processed/x_train.txt
+    - data/processed/y_train.txt
     - src/models/train_model.py
     params:
     - train.min_split
     - train.n_estimators
     - train.seed
-  evaluate:
-    cmd: python src/models/evaluate.py --config=params.yaml
+    outs:
+    - C:\Users\leopa\Documents\workspace\dvc-testing\models\rf_clf.pkl
+  eval:
+    cmd: python src/models/evaluate.py --config params.yaml
     deps:
-    - data/processed
+    - data\processed\x_test.txt
+    - data\processed\y_test.txt
     - models/rf_clf.pkl
     - src/models/evaluate.py
     metrics:
     - reports/metrics.json:
-        cache: false
+          cache: false

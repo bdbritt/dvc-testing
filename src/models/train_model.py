@@ -37,9 +37,18 @@ def write_model(clf) -> None:
     """
     write model to file
     """
+
+    
     logging.info("writing model to file")
-    with open(f"{os.path.join(PROJECT_DIR, CLF_OUT)}\\rf_clf.pkl", "wb") as f_out:
-        pickle.dump(clf, f_out)
+
+    check_dir = f"{os.path.join(PROJECT_DIR, CLF_OUT)}\\"
+    if not check_dir:
+        os.makedirs(check_dir)
+        with open(f"{os.path.join(PROJECT_DIR, CLF_OUT)}\\rf_clf.pkl", "wb") as f_out:
+            pickle.dump(clf, f_out)
+    else:
+        with open(f"{os.path.join(PROJECT_DIR, CLF_OUT)}\\rf_clf.pkl", "wb") as f_out:
+            pickle.dump(clf, f_out)
 
 
 def main():

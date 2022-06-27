@@ -6,13 +6,16 @@ stages:
     - path: src/data/make_dataset.py
       md5: 2bfb3c544a5824bdff836a94355c3cd6
       size: 1049
+    outs:
+    - path: data/raw/indians_diabetes_data.csv
+      md5: 38133a6ddadc18f1a5ca056cd6cfa7e7
+      size: 24008
   prepare:
     cmd: python src/features/prepare.py
     deps:
-    - path: data/raw
-      md5: 16441876126f1be102258c25f584396a.dir
+    - path: data/raw/indians_diabetes_data.csv
+      md5: 38133a6ddadc18f1a5ca056cd6cfa7e7
       size: 24008
-      nfiles: 1
     - path: src/features/prepare.py
       md5: 4f58f14993269fe04b3e7da2099eb9ae
       size: 1997
@@ -20,35 +23,73 @@ stages:
       params.yaml:
         prepare.seed: 20220519
         prepare.split: 0.2
+    outs:
+    - path: data/processed/x_train.txt
+      md5: 3ba03b8fe2f677cb09b93ab15ed5da3f
+      size: 123414
+    - path: data/processed/y_test.txt
+      md5: 636cb7f74257b31c21fb2fd8c85ce129
+      size: 4004
+    - path: data/processed/y_train.txt
+      md5: 40a4eda334fa215ae948fdb7ecba9ee3
+      size: 15964
+    - path: data\processed\x_test.txt
+      md5: 62aed0c010f07d31922a72b8826d0c50
+      size: 30954
   train:
     cmd: python src/models/train_model.py
     deps:
-    - path: data/processed
-      md5: 53b61cf5f88b1479ef1d108e260dab22.dir
-      size: 174336
-      nfiles: 5
+    - path: data/processed/x_train.txt
+      md5: 3ba03b8fe2f677cb09b93ab15ed5da3f
+      size: 123414
+    - path: data/processed/y_train.txt
+      md5: 40a4eda334fa215ae948fdb7ecba9ee3
+      size: 15964
     - path: src/models/train_model.py
-      md5: 17ff23d9628e04af50a0fca14cd00d0a
-      size: 1835
+      md5: adf0ca95bcdc862a8648dbeddd940497
+      size: 2103
     params:
       params.yaml:
         train.min_split: 2
-        train.n_estimators: 250
+        train.n_estimators: 150
         train.seed: 20220519
+    outs:
+    - path: models\rf_clf.pkl
+      md5: d1eb24cb470cd8daa06848393de02e0d
+      size: 2282662
   evaluate:
     cmd: python src/models/evaluate.py --config=params.yaml
     deps:
     - path: data/processed
-      md5: 53b61cf5f88b1479ef1d108e260dab22.dir
+      md5: 7d7081b5811dfa0ed3445f33e97a2ae8.dir
       size: 174336
-      nfiles: 5
+      nfiles: 4
     - path: models/rf_clf.pkl
-      md5: e3fb453660938a28dfffbd3e5a90c718
-      size: 3799616
+      md5: caf3700a3f407b4a790289e80492d6e8
+      size: 1524914
     - path: src/models/evaluate.py
       md5: d3510ce32906cc0b63298593e320cde6
       size: 3271
     outs:
     - path: reports/metrics.json
-      md5: ce58a5485e94abe1fdb42c57481f5b84
-      size: 254
+      md5: 0b91ca5c6909f07155e1722c6ac3a7c1
+      size: 267
+  eval:
+    cmd: python src/models/evaluate.py --config params.yaml
+    deps:
+    - path: data\processed\x_test.txt
+      md5: 62aed0c010f07d31922a72b8826d0c50
+      size: 30954
+    - path: data\processed\y_test.txt
+      md5: 636cb7f74257b31c21fb2fd8c85ce129
+      size: 4004
+    - path: models/rf_clf.pkl
+      md5: d1eb24cb470cd8daa06848393de02e0d
+      size: 2282662
+    - path: src/models/evaluate.py
+      md5: d3510ce32906cc0b63298593e320cde6
+      size: 3271
+    outs:
+    - path: reports/metrics.json
+      md5: 68f42b810b443ff25b8d49f9fc581bcc
+      size: 269
