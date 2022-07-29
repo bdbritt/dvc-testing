@@ -46,8 +46,8 @@ stages:
       md5: 40a4eda334fa215ae948fdb7ecba9ee3
       size: 15964
     - path: src/models/train_model.py
-      md5: adf0ca95bcdc862a8648dbeddd940497
-      size: 2103
+      md5: bba72edc95e985a7dfcc74b354e6cad6
+      size: 2093
     params:
       params.yaml:
         train.min_split: 2
@@ -93,3 +93,21 @@ stages:
     - path: reports/metrics.json
       md5: 68f42b810b443ff25b8d49f9fc581bcc
       size: 269
+  test_model:
+    cmd: python src/tests/test_model.py
+    deps:
+    - path: models/rf_clf.pkl
+      md5: d1eb24cb470cd8daa06848393de02e0d
+      size: 2282662
+    - path: reports/metrics.json
+      md5: 68f42b810b443ff25b8d49f9fc581bcc
+      size: 269
+    - path: src/models/evaluate.py
+      md5: d3510ce32906cc0b63298593e320cde6
+      size: 3271
+    - path: src/models/train_model.py
+      md5: bba72edc95e985a7dfcc74b354e6cad6
+      size: 2093
+    - path: src/tests/test_model.py
+      md5: 4b2aa270442944d783bf52cf82816e0c
+      size: 7241

@@ -39,4 +39,12 @@ stages:
     - src/models/evaluate.py
     metrics:
     - reports/metrics.json:
-          cache: false
+        cache: false
+  test_model:
+    cmd: python src/tests/test_model.py
+    deps:
+    - src/models/evaluate.py
+    - src/models/train_model.py
+    - src/tests/test_model.py
+    - models/rf_clf.pkl
+    - reports/metrics.json
